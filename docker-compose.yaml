@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  api:
+    image: quiz_backend:latest
+    container_name: quiz_backend
+    build:
+      context: .
+      dockerfile: deploy/docker/Dockerfile
+    command: >
+      bash -c "pipenv run python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./:/srv/
+    ports:
+      - "8000:8000"
+    restart: on-failure
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=quizdb
+      - MONGO_INITDB_ROOT_USERNAME=quiz-root
+      - MONGO_INITDB_ROOT_PASSWORD=quiz-secret
+    volumes:
+      - ./deploy/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./volumes/mongo/:/data/db
+    ports:
+      - '27017-27019:27017-27019'

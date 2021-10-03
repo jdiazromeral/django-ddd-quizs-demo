@@ -1,0 +1,6 @@
+.idea
+db.sqlite3
+.python-version
+volumes
+.DS_Store
+__pycache__/
